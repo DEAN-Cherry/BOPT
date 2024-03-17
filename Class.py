@@ -41,13 +41,13 @@ class Deck:
             ranks = ['Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen',
                      'King', 'Ace']
             values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11]
-            for suit in suits:
-                for i in range(13):
+            for i in range(13):
+                for suit in suits:
                     card = Card([suit], ranks[i], values[i])
                     self._cards.append(card)
         else:
             self._cards = deck
-        self._cards_now = self._cards
+        self._cards_now = self._cards.copy()
 
     def get_cards(self):
         return self._cards
@@ -59,7 +59,6 @@ class Deck:
         return self._cards_now
 
     def shuffle(self):
-        self._cards_now = self._cards
         shuffle(self._cards_now)
 
     def deal(self):
@@ -67,6 +66,9 @@ class Deck:
 
     def add_card(self, card: Card):
         self._cards.append(card)
+
+    def add_card_now(self, card: Card):
+        self._cards_now.append(card)
 
     def del_card(self, card: Card):
         self._cards.remove(card)
@@ -80,8 +82,14 @@ class Hand:
     def add_card(self, card: Card):
         self._cards.append(card)
 
+    def deal(self, deck: Deck):
+        self.add_card(deck.deal())
+
     def get_cards(self):
         return self._cards
+
+    def get_card(self, index: int):
+        return self._cards[index]
 
     def __str__(self):
         return str(self._cards)
@@ -89,4 +97,7 @@ class Hand:
     # 弃牌
     def discard(self, card: Card, deck: Deck):
         self._cards.remove(card)
-        self.add_card(deck.deal())
+        self.deal(deck)
+
+    def __len__(self):
+        return len(self._cards)
